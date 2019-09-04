@@ -6,9 +6,10 @@
 #include <memory>
 #include "FileReader.h"
 
-Signature::FileReader::FileReader(std::string path, size_t blockSize) :
+Signature::FileReader::FileReader(std::string path, WorkQueue& workQueue, size_t blockSize) :
     m_Path(std::move(path)),
-    m_BlockSize(blockSize * 1024 *1024) {
+    m_BlockSize(blockSize * 1024 *1024),
+    m_WorkQueue(workQueue) {
 
 }
 
@@ -18,12 +19,20 @@ void Signature::FileReader::Read() const{
 
     if(inputFile.is_open()) {
 
+        size_t blockIdx = 0U;
         while (inputFile) {
             auto pDataBuffer = std::make_unique<unsigned char[]>(m_BlockSize);
             for(auto idx = inputFile.gcount(); idx < m_BlockSize; idx++) {
                 pDataBuffer[idx] = 0U;
             }
-            // TODO push to work queue
+            m_WorkQueue.Push(std::move(pDataBuffer), m_BlockSize, blockIdx++);
+        }
+
+        // Send stop signal to work queue
+        m_WorkQueue.StopProcessing();
+
+        if(!inputFile.eof()) {    // unsuccess reading
+            throw std::ifstream::failure("Error during file processing " + m_Path);
         }
 
     } else {

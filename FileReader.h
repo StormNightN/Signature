@@ -6,10 +6,9 @@
 #define SIGNATURE_FILEREADER_H
 
 #include <string>
-
+#include "WorkQueue.h"
 
 namespace Signature {
-
 
     /**
      * Represent object, which will read file and push DataChunks to WorkQueue
@@ -17,23 +16,38 @@ namespace Signature {
     class FileReader {
 
     public:
+
         /**
          * Default constructor
          *
          * @param path              path to file
          * @param blockSize         block size, which will be pushed to queue
          */
-        explicit FileReader(std::string path, size_t blockSize = 1);
+        explicit FileReader(std::string path, WorkQueue& workQueue, size_t blockSize = 1);
 
         /**
          * Reades blocks and pushes to queue
          */
         void Read() const;
+
+        /**
+         * Destructor
+         */
+        virtual ~FileReader() = default;
+
     private:
 
+        /// Path to processed file
+        ///
         std::string m_Path;
 
+        /// Block size for processing
+        ///
         size_t m_BlockSize;
+
+        /// Reference to queue, which will contains tasks for processing
+        ///
+        WorkQueue& m_WorkQueue;
     };
 }
 
