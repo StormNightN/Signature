@@ -52,6 +52,11 @@ namespace Signature {
          */
         std::unique_ptr<T> Pop();
 
+        /**
+         * Destructor
+         */
+        virtual ~WorkQueue() = default;
+
     private:
 
         /// Queue max size
