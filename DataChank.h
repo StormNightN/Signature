@@ -24,7 +24,7 @@ namespace Signature {
          * @param p_Data    pointer on processing data
          * @param size      size of processing data
          */
-        DataChank(const unsigned char *p_Data, size_t size);
+        DataChank(std::unique_ptr<unsigned char[]> pData, size_t size);
 
         /**
          * Copy constructor
@@ -53,9 +53,9 @@ namespace Signature {
         /**
          * Calculate hash function
          *
-         * @return              hash value in string format
+         * @return              hash value in unsigned char array format
          */
-        std::string Hash() const;
+        std::unique_ptr<unsigned char[]> Hash() const;
 
         /**
          * Destructor
@@ -65,7 +65,7 @@ namespace Signature {
     private:
         /// Data
         ///
-        std::unique_ptr<const unsigned char[]> m_pData;
+        std::unique_ptr<unsigned char[]> m_pData;
 
         /// Size of chank
         ///
@@ -80,7 +80,7 @@ namespace Signature {
          * @return              pointer on another buffer,
          *                      which contains deep copy of p_Data
          */
-        static const unsigned char* CopyData(const unsigned char* p_Data, size_t size);
+        static unsigned char* CopyData(const unsigned char* p_Data, size_t size);
     };
 
 }
