@@ -26,9 +26,7 @@ void Signature::FileReader::Read() const{
                 pDataBuffer[idx] = 0U;
             }
 
-            if(!m_WorkQueue.Push(std::move(pDataBuffer), m_BlockSize, blockIdx++)) {
-                // TODO signalizations
-            }
+            m_WorkQueue.Push(std::move(pDataBuffer), m_BlockSize, blockIdx++);
         }
 
         // Send stop signal to work queue

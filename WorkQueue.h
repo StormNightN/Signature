@@ -37,12 +37,9 @@ namespace Signature {
          *
          * @param args  args for queue element constructor
          *
-         * @return push result
-         * @retval true success
-         * @retval false queue is full
          */
         template <typename... U>
-        bool Push(U&&... args);
+        void Push(U&&... args);
 
         /**
          * Get data from queue
@@ -92,18 +89,14 @@ namespace Signature {
 
     template <typename T>
     template <typename ...U>
-    bool WorkQueue<T>::Push(U&&... args) {
+    void WorkQueue<T>::Push(U&&... args) {
         std::lock_guard<std::mutex> guard(m_QueueMutex);
 
-        if(m_Queue.size() < m_MaxSize) {
-            m_Queue.push(std::make_unique<T>(std::forward<U>(args)...));
+        while (m_Queue.size() >= m_MaxSize) {
             // TODO signalization
-
-            return true;
-
-        } else {
-            return false;
         }
+
+        m_Queue.push(std::make_unique<T>(std::forward<U>(args)...));
     }
 
     template<typename T>
