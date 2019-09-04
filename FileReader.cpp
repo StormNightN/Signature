@@ -22,7 +22,7 @@ void Signature::FileReader::Read() const{
         size_t blockIdx = 0U;
         while (inputFile) {
             auto pDataBuffer = std::make_unique<unsigned char[]>(m_BlockSize);
-            for(auto idx = inputFile.gcount(); idx < m_BlockSize; idx++) {
+            for(auto idx = static_cast<size_t >(inputFile.gcount()); idx < m_BlockSize; idx++) {
                 pDataBuffer[idx] = 0U;
             }
             m_WorkQueue.Push(std::move(pDataBuffer), m_BlockSize, blockIdx++);
