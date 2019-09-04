@@ -23,8 +23,9 @@ namespace Signature {
          *
          * @param p_Data    pointer on processing data
          * @param size      size of processing data
+         * @param idx       data idx
          */
-        DataChank(std::unique_ptr<unsigned char[]> pData, size_t size);
+        DataChank(std::unique_ptr<unsigned char[]> pData, size_t size, size_t idx);
 
         /**
          * Copy constructor
@@ -70,6 +71,10 @@ namespace Signature {
         /// Size of chank
         ///
         size_t m_Size;
+
+        /// Chank id
+        ///
+        size_t m_Idx;
 
         /**
          * Helper method for copy
