@@ -23,7 +23,7 @@ namespace Signature {
          * @param path              path to file
          * @param blockSize         block size, which will be pushed to queue
          */
-        explicit FileReader(std::string path, WorkQueue& workQueue, size_t blockSize = 1);
+        explicit FileReader(std::string path, WorkQueue<DataChank>& workQueue, size_t blockSize = 1);
 
         /**
          * Reades blocks and pushes to queue
@@ -47,7 +47,7 @@ namespace Signature {
 
         /// Reference to queue, which will contains tasks for processing
         ///
-        WorkQueue& m_WorkQueue;
+        WorkQueue<DataChank>& m_WorkQueue;
     };
 }
 

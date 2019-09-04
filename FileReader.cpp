@@ -6,7 +6,7 @@
 #include <memory>
 #include "FileReader.h"
 
-Signature::FileReader::FileReader(std::string path, WorkQueue& workQueue, size_t blockSize) :
+Signature::FileReader::FileReader(std::string path, WorkQueue<DataChank>& workQueue, size_t blockSize) :
     m_Path(std::move(path)),
     m_BlockSize(blockSize * 1024 *1024),
     m_WorkQueue(workQueue) {
@@ -25,7 +25,10 @@ void Signature::FileReader::Read() const{
             for(auto idx = static_cast<size_t >(inputFile.gcount()); idx < m_BlockSize; idx++) {
                 pDataBuffer[idx] = 0U;
             }
-            m_WorkQueue.Push(std::move(pDataBuffer), m_BlockSize, blockIdx++);
+
+            if(!m_WorkQueue.Push(std::move(pDataBuffer), m_BlockSize, blockIdx++)) {
+                // TODO signalizations
+            }
         }
 
         // Send stop signal to work queue
