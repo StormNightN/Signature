@@ -32,7 +32,6 @@ void Signature::StartInfrastructure(const std::string& pathToProcessingFile,
     FileWriter fileWriter(countHashes, pathToOutputFile);
 
     std::vector<std::thread> threadPool;
-    std::vector<HashProcess> hashProcessObjects;
 
     // Add file reader and file writer
     threadPool.emplace_back(std::thread(&FileReader::Read, &fileReader));
@@ -40,8 +39,7 @@ void Signature::StartInfrastructure(const std::string& pathToProcessingFile,
 
     // Add hash processes
     for(size_t idx = 0U; idx < countHashWorkers; idx++) {
-        hashProcessObjects.emplace_back(HashProcess(workQueue, fileWriter));
-        threadPool.emplace_back(std::thread(&HashProcess::Process, &hashProcessObjects[idx]));
+        threadPool.emplace_back(std::thread(&HashProcess::Process, HashProcess(workQueue, fileWriter)));
     }
 
     for(auto& thread : threadPool) {

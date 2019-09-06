@@ -32,9 +32,6 @@ void Signature::FileReader::Read() const{
             m_WorkQueue.Push(std::move(pDataBuffer), m_BlockSize, blockIdx++);
         }
 
-        // Send stop signal to work queue
-        m_WorkQueue.StopProcessing();
-
         if(!inputFile.eof()) {    // unsuccess reading
             throw std::ifstream::failure("Error during file processing " + m_Path);
         }
@@ -42,4 +39,7 @@ void Signature::FileReader::Read() const{
     } else {
         throw std::ifstream::failure("Can't open file " + m_Path);
     }
+
+    // Send stop signal to work queue
+    m_WorkQueue.StopProcessing();
 }

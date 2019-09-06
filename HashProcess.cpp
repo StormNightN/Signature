@@ -23,6 +23,6 @@ void Signature::HashProcess::Process() {
             m_FileWriter.PushHashChank(std::make_unique<DataChank>(
                     DataChank(std::move(pResult), MD5_DIGEST_LENGTH, pDataChank->GetId())));
         }
-        stopProcessing = pDataChank == nullptr;
+        stopProcessing = (pDataChank == nullptr);
     }
 }

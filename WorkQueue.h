@@ -91,6 +91,7 @@ namespace Signature {
 
     template<typename T>
     void Signature::WorkQueue<T>::StopProcessing() {
+        std::unique_lock<std::mutex> guard(m_QueueMutex);
         m_StopProcessing.store(true);
         m_PushNotification.notify_all();
     }
@@ -100,11 +101,9 @@ namespace Signature {
     void WorkQueue<T>::Push(U&&... args) {
         std::unique_lock<std::mutex> guard(m_QueueMutex);
 
-        if (m_Queue.size() >= m_MaxSize) {
-            // waits while queue is full
-            m_PopNotification.wait(guard, [this] {
-                return m_Queue.size() < m_MaxSize; });
-        }
+        // waits while queue is full
+        m_PopNotification.wait(guard, [this] {
+            return m_Queue.size() < m_MaxSize; });
 
         m_Queue.push(std::make_unique<T>(std::forward<U>(args)...));
         m_PushNotification.notify_all();
@@ -114,11 +113,11 @@ namespace Signature {
     std::unique_ptr<T> Signature::WorkQueue<T>::Pop() {
         std::unique_lock<std::mutex> guard(m_QueueMutex);
 
-        if(m_Queue.empty() && !m_StopProcessing) {
-            m_PushNotification.wait(guard, [this] {
+        m_PushNotification.wait(guard, [this] {
                 return !m_Queue.empty() || m_StopProcessing; });
-        }
+
         if(m_Queue.empty() && m_StopProcessing) {
+            m_PopNotification.notify_all();
             return nullptr;
         } else {
 

@@ -43,7 +43,7 @@ void Signature::FileWriter::PrintToOutput(std::ostream& os,
     os << "Block idx: " << idx << " ";
     os << std::hex;
     for(size_t i = 0; i < rp_ProcessingChank->GetSize(); i++) {
-        os << rp_ProcessingChank->GetData()[i];
+        os << static_cast<int>(rp_ProcessingChank->GetData()[i]);
     }
     os << std::dec << std::endl;
 }
