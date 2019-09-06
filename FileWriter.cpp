@@ -32,6 +32,8 @@ void Signature::FileWriter::ProcessHash() {
 }
 
 void Signature::FileWriter::PushHashChank(std::unique_ptr<Signature::DataChank> pDataChank) {
+    std::unique_lock<std::mutex> lock(m_WriteMutex);
+
     m_HashData[pDataChank->GetId()].swap(pDataChank);
     m_Push.notify_one();
 }

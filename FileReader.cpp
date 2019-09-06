@@ -4,11 +4,12 @@
 
 #include <fstream>
 #include <memory>
+#include <iostream>
 #include "FileReader.h"
 
 Signature::FileReader::FileReader(std::string path, WorkQueue<DataChank>& rWorkQueue, size_t blockSize) :
     m_Path(std::move(path)),
-    m_BlockSize(blockSize * 1024),
+    m_BlockSize(blockSize),
     m_WorkQueue(rWorkQueue) {
 
 }
@@ -21,7 +22,9 @@ void Signature::FileReader::Read() const{
 
         size_t blockIdx = 0U;
         while (inputFile) {
+            std::cout << blockIdx << std::endl;
             auto pDataBuffer = std::make_unique<unsigned char[]>(m_BlockSize);
+            inputFile.read((char*)pDataBuffer.get(), m_BlockSize);
             for(auto idx = static_cast<size_t >(inputFile.gcount()); idx < m_BlockSize; idx++) {
                 pDataBuffer[idx] = 0U;
             }

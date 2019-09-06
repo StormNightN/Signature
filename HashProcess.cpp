@@ -3,6 +3,7 @@
 //
 #include "HashProcess.h"
 #include <openssl/md5.h>
+#include <iostream>
 
 
 Signature::HashProcess::HashProcess(Signature::WorkQueue<Signature::DataChank> &rWorkQueue,
@@ -18,7 +19,7 @@ bool Signature::HashProcess::Process() {
         auto pResult = std::make_unique<unsigned char[] >(MD5_DIGEST_LENGTH);
         MD5(pDataChank->GetData().get(), pDataChank->GetSize(), pResult.get());
         m_FileWriter.PushHashChank(std::make_unique<DataChank>(
-                DataChank(std::move(pResult), MD5_DIGEST_LENGTH, pDataChank->GetSize())));
+                DataChank(std::move(pResult), MD5_DIGEST_LENGTH, pDataChank->GetId())));
 
         return true;
     } else {

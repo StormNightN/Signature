@@ -116,9 +116,9 @@ namespace Signature {
 
         if(m_Queue.empty() && !m_StopProcessing) {
             m_PushNotification.wait(guard, [this] {
-                return (m_Queue.size() > 0) || m_StopProcessing; });
+                return !m_Queue.empty() || m_StopProcessing; });
         }
-        if(m_Queue.size() == 0 && m_StopProcessing) {
+        if(m_Queue.empty() && m_StopProcessing) {
             return nullptr;
         } else {
 
