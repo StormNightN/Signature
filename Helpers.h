@@ -28,6 +28,16 @@ namespace Signature {
                             const std::string& pathToOutputFile,
                             size_t blockSize);
 
+    /**
+     * Calculate file size in bytes
+     *
+     * @param fileName                  path to file
+     * @return                          file size
+     * @retval -1                       file was not opened
+     * @retval positive                 file size
+     */
+    long GetFileSize(const std::string &fileName);
+
 }
 
 #endif //SIGNATURE_HELPERS_H

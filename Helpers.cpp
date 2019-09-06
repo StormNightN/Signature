@@ -7,7 +7,7 @@
 #include "FileReader.h"
 #include "FileWriter.h"
 #include "HashProcess.h"
-#include <filesystem>
+#include <fstream>
 #include <math.h>
 #include <thread>
 
@@ -22,9 +22,8 @@ long Signature::GetTotalSystemMemory() {
 void Signature::StartInfrastructure(const std::string& pathToProcessingFile,
                          const std::string& pathToOutputFile,
                          size_t blockSize) {
-    long maxWorkQueueSize = static_cast<long>(GetTotalSystemMemory() * 0.5) / blockSize;
-    size_t countHashes = static_cast<size_t >(ceil(std::filesystem::file_size(pathToOutputFile) /
-                                                   blockSize));
+    auto maxWorkQueueSize = static_cast<long>(GetTotalSystemMemory() * 0.5) / blockSize;
+    auto countHashes = static_cast<size_t>(ceil(GetFileSize(pathToOutputFile) / blockSize));
     auto countHashWorkers = std::thread::hardware_concurrency() - 2;
 
     WorkQueue<DataChank> workQueue(static_cast<size_t >(maxWorkQueueSize));
@@ -47,4 +46,20 @@ void Signature::StartInfrastructure(const std::string& pathToProcessingFile,
     for(auto& thread : threadPool) {
         thread.join();
     }
+}
+
+long Signature::GetFileSize(const std::string &fileName)
+{
+    std::ifstream file(fileName.c_str(), std::ifstream::in | std::ifstream::binary);
+
+    if(!file.is_open())
+    {
+        return -1;
+    }
+
+    file.seekg(0, std::ios::end);
+    long fileSize = file.tellg();
+    file.close();
+
+    return fileSize;
 }
