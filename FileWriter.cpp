@@ -7,7 +7,7 @@
 
 Signature::FileWriter::FileWriter(size_t hashCount, std::string path) :
         m_Path(std::move(path)),
-        m_HashData(hashCount, nullptr),
+        m_HashData(hashCount),
         m_WriteMutex()
 {
 
@@ -23,7 +23,7 @@ void Signature::FileWriter::ProcessHash() {
         std::unique_lock<std::mutex> lock(m_WriteMutex);
 
         if(m_HashData[hashId] == nullptr) {
-        //    m_Push.wait(lock, [this](int hashId) { return m_HashData[hashId] != nullptr; });
+            m_Push.wait(lock, [this, &hashId]() { return m_HashData[hashId] != nullptr; });
         }
         std::swap(p_ProcessingChank, m_HashData[hashId]);
 
