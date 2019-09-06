@@ -8,7 +8,7 @@
 
 Signature::FileReader::FileReader(std::string path, WorkQueue<DataChank>& rWorkQueue, size_t blockSize) :
     m_Path(std::move(path)),
-    m_BlockSize(blockSize * 1024 *1024),
+    m_BlockSize(blockSize * 1024),
     m_WorkQueue(rWorkQueue) {
 
 }
