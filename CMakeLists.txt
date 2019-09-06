@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.13)
 project(Signature)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 find_package(OpenSSL REQUIRED)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -O2 -Werror")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -Wall -Wextra -Wpedantic -O2 -Werror")
 
 add_executable(Signature main.cpp
         DataChank.cpp
@@ -20,5 +20,4 @@ add_executable(Signature main.cpp
         FileWriter.cpp
         )
 
-#target_include_directories(${PROJECT_NAME} include)
 target_link_libraries(${PROJECT_NAME} ssl crypto)

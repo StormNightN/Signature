@@ -24,7 +24,7 @@ namespace Signature {
          * @param rWorkQueue        reference to work queue
          * @param blockSize         block size, which will be pushed to queue
          */
-        explicit FileReader(std::string path, WorkQueue<DataChank>& rWorkQueue, size_t blockSize = 1);
+        explicit FileReader(std::string path, WorkQueue<DataChank>& rWorkQueue, size_t blockSize);
 
         /**
          * Reades blocks and pushes to queue
