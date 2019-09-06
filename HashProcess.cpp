@@ -5,8 +5,10 @@
 #include <openssl/md5.h>
 
 
-Signature::HashProcess::HashProcess(Signature::WorkQueue<Signature::DataChank> &rWorkQueue) :
-    m_WorkQueue(rWorkQueue) {
+Signature::HashProcess::HashProcess(Signature::WorkQueue<Signature::DataChank> &rWorkQueue,
+        FileWriter& rFileWriter) :
+    m_WorkQueue(rWorkQueue),
+    m_FileWriter(rFileWriter) {
 
 }
 
@@ -15,8 +17,8 @@ bool Signature::HashProcess::Process() {
     if(pDataChank != nullptr) {
         auto pResult = std::make_unique<unsigned char[] >(MD5_DIGEST_LENGTH);
         MD5(pDataChank->GetData().get(), pDataChank->GetSize(), pResult.get());
-        auto hashDataChank = DataChank(std::move(pResult), MD5_DIGEST_LENGTH, pDataChank->GetSize());
-        // TODO push to result queue
+        m_FileWriter.PushHashChank(std::make_unique<DataChank>(
+                DataChank(std::move(pResult), MD5_DIGEST_LENGTH, pDataChank->GetSize())));
 
         return true;
     } else {

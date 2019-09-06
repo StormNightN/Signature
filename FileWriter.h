@@ -6,8 +6,9 @@
 #define SIGNATURE_FILEWRITER_H
 
 #include <vector>
-#include <bits/unique_ptr.h>
+#include <memory>
 #include <mutex>
+#include <condition_variable>
 #include "DataChank.h"
 
 namespace Signature {
@@ -30,6 +31,7 @@ namespace Signature {
          */
         void ProcessHash();
 
+        void PushHashChank(std::unique_ptr<DataChank> pDataChank);
     private:
 
         /**
@@ -51,6 +53,8 @@ namespace Signature {
         /// Mutex for m_HashData guarding
         ///
         std::mutex m_WriteMutex;
+
+        std::condition_variable m_Push;
     };
 }
 

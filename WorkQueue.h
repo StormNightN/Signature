@@ -10,6 +10,7 @@
 #include <queue>
 #include <mutex>
 #include "DataChank.h"
+#include <condition_variable>
 
 namespace Signature {
 
@@ -71,6 +72,10 @@ namespace Signature {
         /// Mutex for queue guarding
         ///
         std::mutex m_QueueMutex;
+
+        std::condition_variable m_PushNotification;
+
+        std::condition_variable m_PopNotification;
     };
 
     template <typename T>
@@ -78,39 +83,50 @@ namespace Signature {
             m_MaxSize(maxSize),
             m_StopProcessing(false),
             m_Queue(),
-            m_QueueMutex() {
+            m_QueueMutex(),
+            m_PushNotification(),
+            m_PopNotification() {
 
     }
 
     template<typename T>
     void Signature::WorkQueue<T>::StopProcessing() {
         m_StopProcessing.store(true);
+        m_PushNotification.notify_all();
     }
 
     template <typename T>
     template <typename ...U>
     void WorkQueue<T>::Push(U&&... args) {
-        std::lock_guard<std::mutex> guard(m_QueueMutex);
+        std::unique_lock<std::mutex> guard(m_QueueMutex);
 
-        while (m_Queue.size() >= m_MaxSize) {
-            // TODO signalization
+        if (m_Queue.size() >= m_MaxSize) {
+            // waits while queue is full
+            m_PopNotification.wait(guard, [this] {
+                return m_Queue.size() < m_MaxSize; });
         }
 
         m_Queue.push(std::make_unique<T>(std::forward<U>(args)...));
+        m_PushNotification.notify_all();
     }
 
     template<typename T>
     std::unique_ptr<T> Signature::WorkQueue<T>::Pop() {
-        std::lock_guard<std::mutex> guard(m_QueueMutex);
+        std::unique_lock<std::mutex> guard(m_QueueMutex);
 
-        if(!m_Queue.empty()) {
+        if(m_Queue.empty() && !m_StopProcessing) {
+            m_PushNotification.wait(guard, [this] {
+                return (m_Queue.size() > 0) || m_StopProcessing; });
+        }
+        if(m_Queue.size() == 0 && m_StopProcessing) {
+            return nullptr;
+        } else {
+
             auto pDataChank = std::unique_ptr<DataChank>(std::move(m_Queue.front()));
             m_Queue.pop();
-            // TODO signalization
+            m_PopNotification.notify_all();
 
             return pDataChank;
-        } else {
-            return std::unique_ptr<DataChank>(nullptr);
         }
     }
 }

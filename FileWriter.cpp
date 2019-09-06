@@ -20,17 +20,20 @@ void Signature::FileWriter::ProcessHash() {
 
     while (hashId < hashCount) {
         std::unique_ptr<DataChank> p_ProcessingChank(nullptr);
-        do {
-            std::unique_lock<std::mutex> lock(m_WriteMutex);
-            std::swap(p_ProcessingChank, m_HashData[hashId]);
+        std::unique_lock<std::mutex> lock(m_WriteMutex);
 
-            if(p_ProcessingChank == nullptr) {
-                // TODO signalization
-            }
-        } while (p_ProcessingChank == nullptr); //while waited chank is not pushed
+        if(m_HashData[hashId] == nullptr) {
+        //    m_Push.wait(lock, [this](int hashId) { return m_HashData[hashId] != nullptr; });
+        }
+        std::swap(p_ProcessingChank, m_HashData[hashId]);
 
         PrintToOutput(outputFile, p_ProcessingChank, hashId++);
     }
+}
+
+void Signature::FileWriter::PushHashChank(std::unique_ptr<Signature::DataChank> pDataChank) {
+    m_HashData[pDataChank->GetId()].swap(pDataChank);
+    m_Push.notify_one();
 }
 
 void Signature::FileWriter::PrintToOutput(std::ostream& os,
