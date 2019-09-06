@@ -23,7 +23,8 @@ void Signature::StartInfrastructure(const std::string& pathToProcessingFile,
                          const std::string& pathToOutputFile,
                          size_t blockSize) {
     auto maxWorkQueueSize = static_cast<long>(GetTotalSystemMemory() * 0.5) / blockSize;
-    auto countHashes = static_cast<size_t>(ceil(GetFileSize(pathToProcessingFile) / blockSize));
+    auto countHashes = static_cast<size_t>(ceil(static_cast<double >(GetFileSize(pathToProcessingFile))
+            / blockSize));
     auto countHashWorkers = std::thread::hardware_concurrency() - 2;
 
     WorkQueue<DataChank> workQueue(static_cast<size_t >(maxWorkQueueSize));

@@ -33,7 +33,7 @@ namespace Signature {
          * @retval true new chank was processed
          * @retval false work queue is empty
          */
-        bool Process();
+        void Process();
 
         /**
          * Destructor
