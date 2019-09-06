@@ -15,7 +15,7 @@ add_executable(Signature main.cpp
         FileReader.cpp
         WorkQueue.h
         HashProcess.h
-        HashProcess.cpp)
+        HashProcess.cpp FileWriter.h FileWriter.cpp)
 
 #target_include_directories(${PROJECT_NAME} include)
 target_link_libraries(${PROJECT_NAME} ssl crypto)
