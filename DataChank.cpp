@@ -3,7 +3,6 @@
 //
 
 #include <cstring>
-#include <openssl/md5.h>
 #include <sstream>
 #include "DataChank.h"
 
@@ -14,12 +13,12 @@ Signature::DataChank::DataChank(std::unique_ptr<unsigned char[]> pData, size_t s
 
 }
 
-Signature::DataChank::DataChank(const Signature::DataChank &rDataChank) :
-    m_pData(DataChank::CopyData(rDataChank.m_pData.get(), rDataChank.m_Size)),
-    m_Size(rDataChank.m_Size),
-    m_Idx(rDataChank.m_Idx) {
-
-}
+//Signature::DataChank::DataChank(const Signature::DataChank &rDataChank) :
+//    m_pData(DataChank::CopyData(rDataChank.m_pData.get(), rDataChank.m_Size)),
+//    m_Size(rDataChank.m_Size),
+//    m_Idx(rDataChank.m_Idx) {
+//
+//}
 
 Signature::DataChank::DataChank(Signature::DataChank &&rDataChank) noexcept :
     m_pData(nullptr),
@@ -35,13 +34,6 @@ Signature::DataChank& Signature::DataChank::operator=(Signature::DataChank dataC
     std::swap(m_Idx, dataChank.m_Idx);
 
     return *this;
-}
-
-std::unique_ptr<unsigned char[]> Signature::DataChank::Hash() const {
-    auto pResult = std::make_unique<unsigned char[] >(MD5_DIGEST_LENGTH);
-    MD5(m_pData.get(), m_Size, pResult.get());
-
-    return pResult;
 }
 
 unsigned char* Signature::DataChank::CopyData(const unsigned char* p_Data, size_t size)

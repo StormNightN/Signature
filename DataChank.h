@@ -32,7 +32,7 @@ namespace Signature {
          *
          * @param rDataChank    lreference to copied instance
          */
-        DataChank(const DataChank &rDataChank);
+        DataChank(const DataChank &rDataChank) = delete;
 
         /**
          * Move constructor
@@ -51,12 +51,17 @@ namespace Signature {
          */
         DataChank& operator=(DataChank dataChank);
 
-        /**
-         * Calculate hash function
-         *
-         * @return              hash value in unsigned char array format
-         */
-        std::unique_ptr<unsigned char[]> Hash() const;
+        inline size_t GetSize() const {
+            return m_Size;
+        }
+
+        inline const std::unique_ptr<unsigned char[]>& GetData() const {
+            return m_pData;
+        }
+
+        inline size_t GetId() const {
+            return m_Idx;
+        }
 
         /**
          * Destructor
