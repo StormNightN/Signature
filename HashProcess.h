@@ -28,10 +28,6 @@ namespace Signature {
         /**
          * Calculate hash for next element from work queue and
          * push it to result queue
-         *
-         * @return processing result
-         * @retval true new chank was processed
-         * @retval false work queue is empty
          */
         void Process();
 

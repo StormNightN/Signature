@@ -56,6 +56,12 @@ namespace Signature {
     void PrintMessageToConsole(const std::string &message);
 
     /**
+     * Print message from start current line
+     *
+     * @param message                   message
+     */
+    void PrintMessageFromStartCurrentLine(const std::string &message);
+    /**
      * Print error to console output
      *
      * @param message                   message

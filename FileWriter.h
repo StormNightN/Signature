@@ -53,7 +53,14 @@ namespace Signature {
          * @retval true                     success
          * @retval false                    unsuccess
          */
-        bool PrintToOutput(std::ostream& os, std::unique_ptr<DataChank>& rp_ProcessingChank, size_t idx);
+        bool PrintToOutput(std::ostream& os, std::unique_ptr<DataChank>& rp_ProcessingChank, size_t idx) const;
+
+        /**
+         * Create progress bar
+         * @param progress                  percentage operation progress
+         * @return                          progress bar string
+         */
+        std::string CreateProgressBar(size_t progress) const;
 
         /// Path to output file
         ///
