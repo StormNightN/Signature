@@ -18,6 +18,6 @@ add_executable(Signature main.cpp
         HashProcess.cpp
         includes/FileWriter.h
         FileWriter.cpp
-        )
+        includes/EmptyQueueException.h EmptyQueueException.cpp)
 
 target_link_libraries(${PROJECT_NAME} ssl crypto)
