@@ -10,6 +10,7 @@
 #include <mutex>
 #include <condition_variable>
 #include "DataChank.h"
+#include "WorkQueue.h"
 
 namespace Signature {
 
@@ -32,6 +33,7 @@ namespace Signature {
         void ProcessHash();
 
         void PushHashChank(std::unique_ptr<DataChank> pDataChank);
+
     private:
 
         /**
@@ -54,6 +56,8 @@ namespace Signature {
         ///
         std::mutex m_WriteMutex;
 
+        /// Push signal
+        ///
         std::condition_variable m_Push;
     };
 }

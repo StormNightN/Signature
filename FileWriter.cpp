@@ -3,6 +3,7 @@
 //
 #include <fstream>
 #include "FileWriter.h"
+#include "Helpers.h"
 
 
 Signature::FileWriter::FileWriter(size_t hashCount, std::string path) :
@@ -16,18 +17,18 @@ Signature::FileWriter::FileWriter(size_t hashCount, std::string path) :
 void Signature::FileWriter::ProcessHash() {
     size_t hashId = 0U;
     size_t hashCount = m_HashData.size();
-    std::ofstream outputFile(m_Path);
+    std::ofstream outputFile(m_Path, std::ios::out | std::ios::trunc);
 
     while (hashId < hashCount) {
         std::unique_ptr<DataChank> p_ProcessingChank(nullptr);
         std::unique_lock<std::mutex> lock(m_WriteMutex);
 
-        if(m_HashData[hashId] == nullptr) {
-            m_Push.wait(lock, [this, &hashId]() { return m_HashData[hashId] != nullptr; });
-        }
+        m_Push.wait(lock, [this, &hashId]() { return m_HashData[hashId] != nullptr; });
+
         std::swap(p_ProcessingChank, m_HashData[hashId]);
 
         PrintToOutput(outputFile, p_ProcessingChank, hashId++);
+        PrintMessageToConsole(std::to_string((hashId * 100) / hashCount));
     }
 }
 
@@ -35,7 +36,7 @@ void Signature::FileWriter::PushHashChank(std::unique_ptr<Signature::DataChank> 
     std::unique_lock<std::mutex> lock(m_WriteMutex);
 
     m_HashData[pDataChank->GetId()].swap(pDataChank);
-    m_Push.notify_all();
+    m_Push.notify_one();
 }
 
 void Signature::FileWriter::PrintToOutput(std::ostream& os,
