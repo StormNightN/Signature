@@ -36,10 +36,12 @@ void Signature::FileReader::Read() const{
 
         if(!inputFile.eof()) {    // unsuccess reading
             PrintErrorMessageToConsole("Unsuccess file reading. Stop processing.");
+            std::abort();
         }
 
-    } else {
+    } else {    // can't open file
         PrintErrorMessageToConsole("Can't open file " + m_Path + ". Stop processing.");
+        std::abort();
     }
 
     // Send stop signal to work queue
