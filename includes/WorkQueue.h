@@ -63,7 +63,7 @@ namespace Signature {
 
         /// Flag, indicates that no DataChank will be pushed
         ///
-        std::atomic<bool> m_StopProcessing;
+        bool m_StopProcessing;
 
         /// Queue, which contains data to processing
         ///
@@ -92,7 +92,7 @@ namespace Signature {
     template<typename T>
     void Signature::WorkQueue<T>::StopProcessing() {
         std::unique_lock<std::mutex> guard(m_QueueMutex);
-        m_StopProcessing.store(true);
+        m_StopProcessing = true;
         m_PushNotification.notify_all();
     }
 
