@@ -23,8 +23,12 @@ namespace Signature {
      * @param pathToProcessingFile      path to file, which will be processed
      * @param pathToOutputFile          path to output file
      * @param blockSize                 block size in bytes
+     *
+     * @return                          processing result
+     * @retval 0                        success
+     * @retval -1                       unsuccess
      */
-    void StartInfrastructure(const std::string& pathToProcessingFile,
+    int StartInfrastructure(const std::string& pathToProcessingFile,
                             const std::string& pathToOutputFile,
                             size_t blockSize);
 
@@ -33,8 +37,7 @@ namespace Signature {
      *
      * @param fileName                  path to file
      * @return                          file size
-     * @retval -1                       file was not opened
-     * @retval positive                 file size
+     * @throw std::ifstream::failure    file operation error
      */
     long GetFileSize(const std::string &fileName);
 

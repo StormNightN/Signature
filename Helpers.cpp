@@ -23,19 +23,26 @@ long Signature::GetTotalSystemMemory() {
     return pages * page_size;
 }
 
-void Signature::StartInfrastructure(const std::string& pathToProcessingFile,
+int Signature::StartInfrastructure(const std::string& pathToProcessingFile,
                          const std::string& pathToOutputFile,
                          size_t blockSize) {
     const auto maxWorkQueueSize = static_cast<long>(GetTotalSystemMemory() * 0.5) / blockSize;
-    const auto countHashes = static_cast<size_t>(ceil(static_cast<double >(GetFileSize(pathToProcessingFile))
-            / blockSize));
+    std::vector<std::thread> threadPool;
+
+    size_t countHashes = 0U;
+
+    try {
+        countHashes = static_cast<size_t>(ceil(static_cast<double >(GetFileSize(pathToProcessingFile))
+                                                          / blockSize));
+    } catch (std::ifstream::failure& ex) {
+        return -1;
+    }
+
     const auto countHashWorkers = std::thread::hardware_concurrency() - 2;
 
     WorkQueue<DataChank> workQueue(static_cast<size_t >(maxWorkQueueSize));
     FileReader fileReader(pathToProcessingFile, workQueue, blockSize);
     FileWriter fileWriter(countHashes, pathToOutputFile);
-
-    std::vector<std::thread> threadPool;
 
     // Add file reader and file writer
     threadPool.emplace_back(std::thread(&FileReader::Read, &fileReader));
@@ -49,15 +56,13 @@ void Signature::StartInfrastructure(const std::string& pathToProcessingFile,
     for(auto& thread : threadPool) {
         thread.join();
     }
+
+    return 0;
 }
 
 long Signature::GetFileSize(const std::string &fileName) {
     std::ifstream file(fileName.c_str(), std::ifstream::in | std::ifstream::binary);
-
-    if(!file.is_open())
-    {
-        return -1;
-    }
+    file.exceptions(std::ifstream::failbit);
 
     file.seekg(0, std::ios::end);
     long fileSize = file.tellg();

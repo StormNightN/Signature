@@ -29,7 +29,5 @@ int main(int argc, char** argv) {
     Signature::PrintMessageToConsole("Input file: " + std::string(argv[1]));
     Signature::PrintMessageToConsole("Output file: " + std::string(argv[2]));
     Signature::PrintMessageToConsole("Block size: " + std::to_string(blockSize));
-    Signature::StartInfrastructure(argv[1], argv[2], Signature::ConvertMbytesToBytes(blockSize));
-
-    return 0;
+    return Signature::StartInfrastructure(argv[1], argv[2], Signature::ConvertMbytesToBytes(blockSize));
 }
