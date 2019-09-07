@@ -39,6 +39,16 @@ namespace Signature {
     long GetFileSize(const std::string &fileName);
 
     /**
+     * Convert megabytes to bytes
+     *
+     * @param size                      size to megabytes
+     * @return                          size to bytes
+     */
+    inline size_t ConvertMbytesToBytes(size_t size) {
+        return size * 1024 * 1024;
+    }
+
+    /**
      * Print to console output
      *
      * @param message                   message
