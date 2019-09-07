@@ -18,10 +18,12 @@ Signature::FileWriter::FileWriter(size_t hashCount, std::string path) :
 void Signature::FileWriter::ProcessHash() {
     size_t hashId = 0U;
     size_t hashCount = m_HashData.size();
-    std::ofstream outputFile(m_Path, std::ios::out | std::ios::trunc);
 
-    size_t completedPercents = 0;
-    if(outputFile.is_open()) {
+    try {
+        std::ofstream outputFile(m_Path, std::ios::out | std::ios::trunc);
+        outputFile.exceptions(std::ifstream::failbit);
+        size_t completedPercents = 0;
+
         while (hashId < hashCount) {
             std::unique_ptr<DataChank> p_ProcessingChank(nullptr);
             std::unique_lock<std::mutex> lock(m_WriteMutex);
@@ -30,10 +32,7 @@ void Signature::FileWriter::ProcessHash() {
 
             std::swap(p_ProcessingChank, m_HashData[hashId]);
 
-            if(!PrintToOutput(outputFile, p_ProcessingChank, hashId++)) {
-                PrintErrorMessageToConsole("Can't write to output file. Stop processing");
-                std::abort();
-            }
+            PrintToOutput(outputFile, p_ProcessingChank, hashId++);
 
             size_t newCompletedPercents = (hashId * 100) / hashCount;
             if(completedPercents != newCompletedPercents) {
@@ -41,8 +40,8 @@ void Signature::FileWriter::ProcessHash() {
                 completedPercents = newCompletedPercents;
             }
         }
-    } else {
-        PrintErrorMessageToConsole("Can't open output file " + m_Path + ". Stop processing.");
+    } catch(std::ifstream::failure& ex) {
+        PrintErrorMessageToConsole("Output file problem. Stop processing.");
         std::abort();
     }
 
@@ -56,14 +55,14 @@ void Signature::FileWriter::PushHashChank(std::unique_ptr<Signature::DataChank> 
     m_Push.notify_one();
 }
 
-bool Signature::FileWriter::PrintToOutput(std::ostream& os,
+void Signature::FileWriter::PrintToOutput(std::ostream& os,
         std::unique_ptr<DataChank>& rp_ProcessingChank, size_t idx) const {
-    bool isGoodState = (os << "Block idx: " << idx << " Hash value: " << std::hex << std::setfill('0')).good();
-    for(size_t i = 0; (i < rp_ProcessingChank->GetSize()) && (isGoodState); i++) {
-        isGoodState = (os << std::setw(2) << static_cast<int>(rp_ProcessingChank->GetData()[i]) << ' ').good();
+    os << "Block idx: " << idx << " Hash value: " << std::hex << std::setfill('0');
+    for(size_t i = 0; i < rp_ProcessingChank->GetSize(); i++) {
+        os << std::setw(2) << static_cast<int>(rp_ProcessingChank->GetData()[i]) << ' ';
     }
 
-    return isGoodState && (os << std::dec << std::endl).good();
+    os << std::dec << std::endl;
 }
 
 std::string Signature::FileWriter::CreateProgressBar(size_t progress) const {

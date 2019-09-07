@@ -48,12 +48,8 @@ namespace Signature {
          * @param os                        output stream
          * @param rp_ProcessingChank        reference on unique pointer which points on hash chank
          * @param idx                       hash block id
-         *
-         * @return                          print operation result
-         * @retval true                     success
-         * @retval false                    unsuccess
          */
-        bool PrintToOutput(std::ostream& os, std::unique_ptr<DataChank>& rp_ProcessingChank, size_t idx) const;
+        void PrintToOutput(std::ostream& os, std::unique_ptr<DataChank>& rp_ProcessingChank, size_t idx) const;
 
         /**
          * Create progress bar
