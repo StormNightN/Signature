@@ -9,8 +9,9 @@
 #include <atomic>
 #include <queue>
 #include <mutex>
-#include "DataChank.h"
 #include <condition_variable>
+#include "DataChank.h"
+#include "EmptyQueueException.h"
 
 namespace Signature {
 
@@ -46,7 +47,7 @@ namespace Signature {
          * Get data from queue
          *
          * @return unique pointer on data
-         * @retval nullptr queue is empty, data otherwise
+         * @throw EmptyQueue exception if queue is empty
          */
         std::unique_ptr<T> Pop();
 
@@ -118,7 +119,7 @@ namespace Signature {
 
         if(m_Queue.empty() && m_StopProcessing) {
             m_PopNotification.notify_all();
-            return nullptr;
+            throw EmptyQueueException();
         } else {
 
             auto pDataChank = std::unique_ptr<DataChank>(std::move(m_Queue.front()));
