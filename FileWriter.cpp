@@ -20,16 +20,24 @@ void Signature::FileWriter::ProcessHash() {
     size_t hashCount = m_HashData.size();
     std::ofstream outputFile(m_Path, std::ios::out | std::ios::trunc);
 
-    while (hashId < hashCount) {
-        std::unique_ptr<DataChank> p_ProcessingChank(nullptr);
-        std::unique_lock<std::mutex> lock(m_WriteMutex);
+    if(outputFile.is_open()) {
+        while (hashId < hashCount) {
+            std::unique_ptr<DataChank> p_ProcessingChank(nullptr);
+            std::unique_lock<std::mutex> lock(m_WriteMutex);
 
-        m_Push.wait(lock, [this, &hashId]() { return m_HashData[hashId] != nullptr; });
+            m_Push.wait(lock, [this, &hashId]() { return m_HashData[hashId] != nullptr; });
 
-        std::swap(p_ProcessingChank, m_HashData[hashId]);
+            std::swap(p_ProcessingChank, m_HashData[hashId]);
 
-        PrintToOutput(outputFile, p_ProcessingChank, hashId++);
-        PrintMessageToConsole(std::to_string((hashId * 100) / hashCount));
+            if(!PrintToOutput(outputFile, p_ProcessingChank, hashId++)) {
+                PrintErrorMessageToConsole("Can't write to output file. Stop processing");
+                std::abort();
+            }
+            PrintMessageToConsole(std::to_string((hashId * 100) / hashCount));
+        }
+    } else {
+        PrintErrorMessageToConsole("Can't open output file " + m_Path + ". Stop processing.");
+        std::abort();
     }
 }
 
@@ -40,12 +48,12 @@ void Signature::FileWriter::PushHashChank(std::unique_ptr<Signature::DataChank> 
     m_Push.notify_one();
 }
 
-void Signature::FileWriter::PrintToOutput(std::ostream& os,
+bool Signature::FileWriter::PrintToOutput(std::ostream& os,
         std::unique_ptr<DataChank>& rp_ProcessingChank, size_t idx) {
-    os << "Block idx: " << idx << " Hash value: ";
-    os << std::hex << std::setfill('0');
-    for(size_t i = 0; i < rp_ProcessingChank->GetSize(); i++) {
-        os << std::setw(2) << static_cast<int>(rp_ProcessingChank->GetData()[i]) << ' ';
+    bool isGoodState = (os << "Block idx: " << idx << " Hash value: " << std::hex << std::setfill('0')).good();
+    for(size_t i = 0; (i < rp_ProcessingChank->GetSize()) && (isGoodState); i++) {
+        isGoodState = (os << std::setw(2) << static_cast<int>(rp_ProcessingChank->GetData()[i]) << ' ').good();
     }
-    os << std::dec << std::endl;
+
+    return isGoodState && (os << std::dec << std::endl).good();
 }

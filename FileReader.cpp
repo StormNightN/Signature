@@ -25,13 +25,18 @@ void Signature::FileReader::Read() const{
 
         size_t blockIdx = 0U;
         while (inputFile) {
-            auto pDataBuffer = std::make_unique<unsigned char[]>(m_BlockSize);
-            inputFile.read((char*)pDataBuffer.get(), m_BlockSize);
-            for(auto idx = static_cast<size_t >(inputFile.gcount()); idx < m_BlockSize; idx++) {
-                pDataBuffer[idx] = 0U;
-            }
+            try {
+                auto pDataBuffer = std::make_unique<unsigned char[]>(m_BlockSize);
+                inputFile.read((char *) pDataBuffer.get(), m_BlockSize);
+                for (auto idx = static_cast<size_t >(inputFile.gcount()); idx < m_BlockSize; idx++) {
+                    pDataBuffer[idx] = 0U;
+                }
 
-            m_WorkQueue.Push(std::move(pDataBuffer), m_BlockSize, blockIdx++);
+                m_WorkQueue.Push(std::move(pDataBuffer), m_BlockSize, blockIdx++);
+            } catch (std::bad_alloc& ex) {
+                PrintErrorMessageToConsole("Memory allocation error. Stop processing.");
+                std::abort();
+            }
         }
 
         if(!inputFile.eof()) {    // unsuccess reading
@@ -40,7 +45,7 @@ void Signature::FileReader::Read() const{
         }
 
     } else {    // can't open file
-        PrintErrorMessageToConsole("Can't open file " + m_Path + ". Stop processing.");
+        PrintErrorMessageToConsole("Can't open processing file " + m_Path + ". Stop processing.");
         std::abort();
     }
 

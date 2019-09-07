@@ -32,6 +32,11 @@ namespace Signature {
          */
         void ProcessHash();
 
+        /**
+         * Push data chank for processing
+         *
+         * @param pDataChank    added DataChank
+         */
         void PushHashChank(std::unique_ptr<DataChank> pDataChank);
 
     private:
@@ -41,8 +46,12 @@ namespace Signature {
          * @param os                        output stream
          * @param rp_ProcessingChank        reference on unique pointer which points on hash chank
          * @param idx                       hash block id
+         *
+         * @return                          print operation result
+         * @retval true                     success
+         * @retval false                    unsuccess
          */
-        void PrintToOutput(std::ostream& os, std::unique_ptr<DataChank>& rp_ProcessingChank, size_t idx);
+        bool PrintToOutput(std::ostream& os, std::unique_ptr<DataChank>& rp_ProcessingChank, size_t idx);
 
         /// Path to output file
         ///
