@@ -10,7 +10,11 @@
 #include <fstream>
 #include <math.h>
 #include <thread>
+#include <iostream>
 
+/// Mutex for console output guarding
+///
+static std::mutex consoleMutex;
 
 long Signature::GetTotalSystemMemory() {
     long pages = sysconf(_SC_PHYS_PAGES);
@@ -47,8 +51,7 @@ void Signature::StartInfrastructure(const std::string& pathToProcessingFile,
     }
 }
 
-long Signature::GetFileSize(const std::string &fileName)
-{
+long Signature::GetFileSize(const std::string &fileName) {
     std::ifstream file(fileName.c_str(), std::ifstream::in | std::ifstream::binary);
 
     if(!file.is_open())
@@ -61,4 +64,14 @@ long Signature::GetFileSize(const std::string &fileName)
     file.close();
 
     return fileSize;
+}
+
+void Signature::PrintMessageToConsole(const std::string &message) {
+    std::unique_lock<std::mutex> guard(consoleMutex);
+    std::cout << message << std::endl;
+}
+
+void Signature::PrintErrorMessageToConsole(const std::string &message) {
+    std::unique_lock<std::mutex> guard(consoleMutex);
+    std::cerr << message << std::endl;
 }

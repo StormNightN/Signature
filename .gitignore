@@ -8,4 +8,4 @@ Makefile
 *.cbp
 cmake_install.cmake
 *.so
-SafetyClient
+Signature

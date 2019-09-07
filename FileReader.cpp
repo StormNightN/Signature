@@ -6,8 +6,11 @@
 #include <memory>
 #include <iostream>
 #include "FileReader.h"
+#include "Helpers.h"
 
-Signature::FileReader::FileReader(std::string path, WorkQueue<DataChank>& rWorkQueue, size_t blockSize) :
+Signature::FileReader::FileReader(std::string path,
+        WorkQueue<DataChank>& rWorkQueue,
+        size_t blockSize) :
     m_Path(std::move(path)),
     m_BlockSize(blockSize),
     m_WorkQueue(rWorkQueue) {
@@ -22,7 +25,6 @@ void Signature::FileReader::Read() const{
 
         size_t blockIdx = 0U;
         while (inputFile) {
-            std::cout << blockIdx << std::endl;
             auto pDataBuffer = std::make_unique<unsigned char[]>(m_BlockSize);
             inputFile.read((char*)pDataBuffer.get(), m_BlockSize);
             for(auto idx = static_cast<size_t >(inputFile.gcount()); idx < m_BlockSize; idx++) {
@@ -33,11 +35,11 @@ void Signature::FileReader::Read() const{
         }
 
         if(!inputFile.eof()) {    // unsuccess reading
-            throw std::ifstream::failure("Error during file processing " + m_Path);
+            PrintErrorMessageToConsole("Unsuccess file reading. Stop processing.");
         }
 
     } else {
-        throw std::ifstream::failure("Can't open file " + m_Path);
+        PrintErrorMessageToConsole("Can't open file " + m_Path + ". Stop processing.");
     }
 
     // Send stop signal to work queue

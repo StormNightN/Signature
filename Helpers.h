@@ -38,6 +38,19 @@ namespace Signature {
      */
     long GetFileSize(const std::string &fileName);
 
+    /**
+     * Print to console output
+     *
+     * @param message                   message
+     */
+    void PrintMessageToConsole(const std::string &message);
+
+    /**
+     * Print error to console output
+     *
+     * @param message                   message
+     */
+    void PrintErrorMessageToConsole(const std::string &message);
 }
 
 #endif //SIGNATURE_HELPERS_H
