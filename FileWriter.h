@@ -18,7 +18,9 @@ namespace Signature {
      * Represent object, which write block hashes to output file
      */
     class FileWriter {
+
     public:
+
         /**
          * Default constructor
          *

@@ -69,6 +69,7 @@ namespace Signature {
         ~DataChank() = default;
 
     private:
+
         /// Data
         ///
         std::unique_ptr<unsigned char[]> m_pData;
@@ -80,17 +81,6 @@ namespace Signature {
         /// Chank id
         ///
         size_t m_Idx;
-
-        /**
-         * Helper method for copy
-         *
-         * @param p_Data        pointer to copied data
-         * @param size          size of copied data
-         *
-         * @return              pointer on another buffer,
-         *                      which contains deep copy of p_Data
-         */
-        static unsigned char* CopyData(const unsigned char* p_Data, size_t size);
     };
 
 }

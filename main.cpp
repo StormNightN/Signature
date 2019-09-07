@@ -2,6 +2,12 @@
 #include <sstream>
 #include "Helpers.h"
 
+/**
+ * Start point
+ * first parameter(require)     path to processing file
+ * second parameter(require)    path to output file
+ * third parameter(optionally)  block size(MB), default 1 MB
+ */
 int main(int argc, char** argv) {
     if(argc < 2) {
         Signature::PrintErrorMessageToConsole("Error. You should write at least processing and output file path.");

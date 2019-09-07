@@ -19,6 +19,7 @@ void Signature::HashProcess::Process() {
 
     while (!stopProcessing){
         auto pDataChank = m_WorkQueue.Pop();
+
         if(pDataChank != nullptr) {
             try {
                 auto pResult = std::make_unique<unsigned char[]>(MD5_DIGEST_LENGTH);
@@ -30,6 +31,7 @@ void Signature::HashProcess::Process() {
                 std::abort();
             }
         }
+
         stopProcessing = (pDataChank == nullptr);
     }
 }

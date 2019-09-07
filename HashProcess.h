@@ -23,7 +23,7 @@ namespace Signature {
          * @param rWorkQueue reference to work queue
          * @param rFileWriter reference to file writer
          */
-        explicit HashProcess(WorkQueue<DataChank>& rWorkQueue, FileWriter& rFileWriter);
+        HashProcess(WorkQueue<DataChank>& rWorkQueue, FileWriter& rFileWriter);
 
         /**
          * Calculate hash for next element from work queue and
@@ -46,6 +46,8 @@ namespace Signature {
         ///
         WorkQueue<DataChank>& m_WorkQueue;
 
+        /// Reference to hash consumer
+        ///
         FileWriter& m_FileWriter;
     };
 }

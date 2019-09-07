@@ -28,11 +28,3 @@ Signature::DataChank& Signature::DataChank::operator=(Signature::DataChank dataC
 
     return *this;
 }
-
-unsigned char* Signature::DataChank::CopyData(const unsigned char* p_Data, size_t size)
-{
-    auto p_DataCopy = new unsigned char[size];
-    memcpy(p_DataCopy, p_Data, size);
-
-    return p_DataCopy;
-}
