@@ -2,6 +2,7 @@
 // Created by stormnight on 9/6/19.
 //
 #include <fstream>
+#include <iomanip>
 #include "FileWriter.h"
 #include "Helpers.h"
 
@@ -41,10 +42,10 @@ void Signature::FileWriter::PushHashChank(std::unique_ptr<Signature::DataChank> 
 
 void Signature::FileWriter::PrintToOutput(std::ostream& os,
         std::unique_ptr<DataChank>& rp_ProcessingChank, size_t idx) {
-    os << "Block idx: " << idx << " ";
-    os << std::hex;
+    os << "Block idx: " << idx << " Hash value: ";
+    os << std::hex << std::setfill('0');
     for(size_t i = 0; i < rp_ProcessingChank->GetSize(); i++) {
-        os << static_cast<int>(rp_ProcessingChank->GetData()[i]);
+        os << std::setw(2) << static_cast<int>(rp_ProcessingChank->GetData()[i]) << ' ';
     }
     os << std::dec << std::endl;
 }

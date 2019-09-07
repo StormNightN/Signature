@@ -13,13 +13,6 @@ Signature::DataChank::DataChank(std::unique_ptr<unsigned char[]> pData, size_t s
 
 }
 
-//Signature::DataChank::DataChank(const Signature::DataChank &rDataChank) :
-//    m_pData(DataChank::CopyData(rDataChank.m_pData.get(), rDataChank.m_Size)),
-//    m_Size(rDataChank.m_Size),
-//    m_Idx(rDataChank.m_Idx) {
-//
-//}
-
 Signature::DataChank::DataChank(Signature::DataChank &&rDataChank) noexcept :
     m_pData(nullptr),
     m_Size(0U) {
