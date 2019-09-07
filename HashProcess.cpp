@@ -1,8 +1,8 @@
 //
 // Created by stormnight on 9/4/19.
 //
-#include "HashProcess.h"
-#include "Helpers.h"
+#include "includes/HashProcess.h"
+#include "includes/Helpers.h"
 #include <openssl/md5.h>
 #include <iostream>
 

@@ -3,8 +3,8 @@
 //
 #include <fstream>
 #include <iomanip>
-#include "FileWriter.h"
-#include "Helpers.h"
+#include "includes/FileWriter.h"
+#include "includes/Helpers.h"
 
 
 Signature::FileWriter::FileWriter(size_t hashCount, std::string path) :

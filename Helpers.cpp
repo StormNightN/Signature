@@ -3,10 +3,10 @@
 //
 
 #include <unistd.h>
-#include "Helpers.h"
-#include "FileReader.h"
-#include "FileWriter.h"
-#include "HashProcess.h"
+#include "includes/Helpers.h"
+#include "includes/FileReader.h"
+#include "includes/FileWriter.h"
+#include "includes/HashProcess.h"
 #include <fstream>
 #include <math.h>
 #include <thread>

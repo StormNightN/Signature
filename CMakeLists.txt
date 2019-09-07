@@ -8,15 +8,15 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -Wall -Wextra -Wpedantic -O2 -W
 
 add_executable(Signature main.cpp
         DataChank.cpp
-        DataChank.h
-        Helpers.h
+        includes/DataChank.h
+        includes/Helpers.h
         Helpers.cpp
-        FileReader.h
+        includes/FileReader.h
         FileReader.cpp
-        WorkQueue.h
-        HashProcess.h
+        includes/WorkQueue.h
+        includes/HashProcess.h
         HashProcess.cpp
-        FileWriter.h
+        includes/FileWriter.h
         FileWriter.cpp
         )
 
