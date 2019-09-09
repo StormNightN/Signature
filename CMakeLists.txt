@@ -7,13 +7,13 @@ find_package(OpenSSL REQUIRED)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -Wall -Wextra -Wpedantic -O2 -Werror")
 
 add_executable(Signature main.cpp
-        DataChank.cpp
-        includes/DataChank.h
+        DataChunk.cpp
+        includes/DataChunk.h
         includes/Helpers.h
         Helpers.cpp
         includes/FileReader.h
         FileReader.cpp
-        includes/WorkQueue.h
+        includes/ConcurrentQueue.h
         includes/HashProcess.h
         HashProcess.cpp
         includes/FileWriter.h

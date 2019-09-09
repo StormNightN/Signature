@@ -25,7 +25,7 @@ void Signature::FileWriter::ProcessHash() {
         size_t completedPercents = 0;
 
         while (hashId < hashCount) {
-            std::unique_ptr<DataChank> p_ProcessingChank(nullptr);
+            std::unique_ptr<DataChunk> p_ProcessingChank(nullptr);
             std::unique_lock<std::mutex> lock(m_WriteMutex);
 
             m_Push.wait(lock, [this, &hashId]() { return m_HashData[hashId] != nullptr; });
@@ -48,7 +48,7 @@ void Signature::FileWriter::ProcessHash() {
     PrintMessageToConsole("\nProcessing was completed.");
 }
 
-void Signature::FileWriter::PushHashChank(std::unique_ptr<Signature::DataChank> pDataChank) {
+void Signature::FileWriter::PushHashChank(std::unique_ptr<Signature::DataChunk> pDataChank) {
     std::unique_lock<std::mutex> lock(m_WriteMutex);
 
     m_HashData[pDataChank->GetId()].swap(pDataChank);
@@ -56,7 +56,7 @@ void Signature::FileWriter::PushHashChank(std::unique_ptr<Signature::DataChank> 
 }
 
 void Signature::FileWriter::PrintToOutput(std::ostream& os,
-        std::unique_ptr<DataChank>& rp_ProcessingChank, size_t idx) const {
+        std::unique_ptr<DataChunk>& rp_ProcessingChank, size_t idx) const {
     os << "Block idx: " << idx << " Hash value: " << std::hex << std::setfill('0');
     for(size_t i = 0; i < rp_ProcessingChank->GetSize(); i++) {
         os << std::setw(2) << static_cast<int>(rp_ProcessingChank->GetData()[i]) << ' ';

@@ -5,7 +5,7 @@
 #ifndef SIGNATURE_HASHPROCESS_H
 #define SIGNATURE_HASHPROCESS_H
 
-#include "WorkQueue.h"
+#include "ConcurrentQueue.h"
 #include "FileWriter.h"
 
 namespace Signature {
@@ -23,7 +23,7 @@ namespace Signature {
          * @param rWorkQueue reference to work queue
          * @param rFileWriter reference to file writer
          */
-        HashProcess(WorkQueue<DataChank>& rWorkQueue, FileWriter& rFileWriter);
+        HashProcess(ConcurrentQueue<DataChunk>& rWorkQueue, FileWriter& rFileWriter);
 
         /**
          * Calculate hash for next element from work queue and
@@ -40,7 +40,7 @@ namespace Signature {
 
         /// Reference to work queue
         ///
-        WorkQueue<DataChank>& m_WorkQueue;
+        ConcurrentQueue<DataChunk>& m_WorkQueue;
 
         /// Reference to hash consumer
         ///

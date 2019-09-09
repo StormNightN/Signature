@@ -6,7 +6,7 @@
 #define SIGNATURE_FILEREADER_H
 
 #include <string>
-#include "WorkQueue.h"
+#include "ConcurrentQueue.h"
 
 namespace Signature {
 
@@ -24,7 +24,7 @@ namespace Signature {
          * @param rWorkQueue        reference to work queue
          * @param blockSize         block size, which will be pushed to queue
          */
-        FileReader(std::string path, WorkQueue<DataChank>& rWorkQueue, size_t blockSize);
+        FileReader(std::string path, ConcurrentQueue<DataChunk>& rWorkQueue, size_t blockSize);
 
         /**
          * Reades blocks and pushes to queue
@@ -48,7 +48,7 @@ namespace Signature {
 
         /// Reference to queue, which will contains tasks for processing
         ///
-        WorkQueue<DataChank>& m_WorkQueue;
+        ConcurrentQueue<DataChunk>& m_WorkQueue;
     };
 }
 

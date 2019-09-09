@@ -9,8 +9,8 @@
 #include <memory>
 #include <mutex>
 #include <condition_variable>
-#include "DataChank.h"
-#include "WorkQueue.h"
+#include "DataChunk.h"
+#include "ConcurrentQueue.h"
 
 namespace Signature {
 
@@ -39,7 +39,7 @@ namespace Signature {
          *
          * @param pDataChank    added DataChank
          */
-        void PushHashChank(std::unique_ptr<DataChank> pDataChank);
+        void PushHashChank(std::unique_ptr<DataChunk> pDataChank);
 
     private:
 
@@ -49,7 +49,7 @@ namespace Signature {
          * @param rp_ProcessingChank        reference on unique pointer which points on hash chank
          * @param idx                       hash block id
          */
-        void PrintToOutput(std::ostream& os, std::unique_ptr<DataChank>& rp_ProcessingChank, size_t idx) const;
+        void PrintToOutput(std::ostream& os, std::unique_ptr<DataChunk>& rp_ProcessingChank, size_t idx) const;
 
         /**
          * Create progress bar
@@ -64,7 +64,7 @@ namespace Signature {
 
         /// Collection, which contains unique pointers on hash data chanks
         ///
-        std::vector<std::unique_ptr<DataChank>> m_HashData;
+        std::vector<std::unique_ptr<DataChunk>> m_HashData;
 
         /// Mutex for m_HashData guarding
         ///

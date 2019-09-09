@@ -40,7 +40,7 @@ int Signature::StartInfrastructure(const std::string& pathToProcessingFile,
 
     const auto countHashWorkers = std::thread::hardware_concurrency() - 2;
 
-    WorkQueue<DataChank> workQueue(static_cast<size_t >(maxWorkQueueSize));
+    ConcurrentQueue<DataChunk> workQueue(static_cast<size_t >(maxWorkQueueSize));
     FileReader fileReader(pathToProcessingFile, workQueue, blockSize);
     FileWriter fileWriter(countHashes, pathToOutputFile);
 

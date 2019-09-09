@@ -5,8 +5,8 @@
 #include <memory>
 #include <openssl/md5.h>
 
-#ifndef SIGNATURE_DATACHANK_H
-#define SIGNATURE_DATACHANK_H
+#ifndef SIGNATURE_DATACHUNK_H
+#define SIGNATURE_DATACHUNK_H
 
 namespace Signature {
 
@@ -14,7 +14,7 @@ namespace Signature {
      * Represents work entity. Contains data, for which hash value will be
      * calculated
      */
-    class DataChank {
+    class DataChunk {
 
     public:
 
@@ -25,21 +25,21 @@ namespace Signature {
          * @param size      size of processing data
          * @param idx       data idx
          */
-        DataChank(std::unique_ptr<unsigned char[]> pData, size_t size, size_t idx);
+        DataChunk(std::unique_ptr<unsigned char[]> pData, size_t size, size_t idx);
 
         /**
          * Copy constructor
          *
          * @param rDataChank    lreference to copied instance
          */
-        DataChank(const DataChank &rDataChank) = delete;
+        DataChunk(const DataChunk &rDataChank) = delete;
 
         /**
          * Move constructor
          *
          * @param rDataChank    rreference to copied instance
          */
-        DataChank(DataChank &&rDataChank) noexcept;
+        DataChunk(DataChunk &&rDataChank) noexcept;
 
         /**
          * Assignment operator
@@ -49,7 +49,7 @@ namespace Signature {
          *
          * @return              reference on current instance
          */
-        DataChank& operator=(DataChank dataChank);
+        DataChunk& operator=(DataChunk dataChank);
 
         inline size_t GetSize() const {
             return m_Size;
@@ -66,7 +66,7 @@ namespace Signature {
         /**
          * Destructor
          */
-        ~DataChank() = default;
+        ~DataChunk() = default;
 
     private:
 
@@ -86,4 +86,4 @@ namespace Signature {
 }
 
 
-#endif //SIGNATURE_DATACHANK_H
+#endif //SIGNATURE_DATACHUNK_H

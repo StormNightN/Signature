@@ -2,15 +2,15 @@
 // Created by stormnight on 9/4/19.
 //
 
-#ifndef SIGNATURE_WORKQUEUE_H
-#define SIGNATURE_WORKQUEUE_H
+#ifndef SIGNATURE_CONCURRENTQUEUE_H
+#define SIGNATURE_CONCURRENTQUEUE_H
 
 #include <cstring>
 #include <atomic>
 #include <queue>
 #include <mutex>
 #include <condition_variable>
-#include "DataChank.h"
+#include "DataChunk.h"
 #include "EmptyQueueException.h"
 
 namespace Signature {
@@ -19,7 +19,7 @@ namespace Signature {
      * Represent class, which contains data to processing
      */
     template <typename T>
-    class WorkQueue {
+    class ConcurrentQueue {
 
     public:
         /**
@@ -27,7 +27,7 @@ namespace Signature {
          *
          * @param maxSize       max element count in queue
          */
-        explicit WorkQueue(size_t maxSize);
+        explicit ConcurrentQueue(size_t maxSize);
 
         /**
          * Function, via which signal about stop processing will be sent
@@ -54,7 +54,7 @@ namespace Signature {
         /**
          * Destructor
          */
-        virtual ~WorkQueue() = default;
+        virtual ~ConcurrentQueue() = default;
 
     private:
 
@@ -80,7 +80,7 @@ namespace Signature {
     };
 
     template <typename T>
-    Signature::WorkQueue<T>::WorkQueue(size_t maxSize) :
+    Signature::ConcurrentQueue<T>::ConcurrentQueue(size_t maxSize) :
             m_MaxSize(maxSize),
             m_StopProcessing(false),
             m_Queue(),
@@ -91,7 +91,7 @@ namespace Signature {
     }
 
     template<typename T>
-    void Signature::WorkQueue<T>::StopProcessing() {
+    void Signature::ConcurrentQueue<T>::StopProcessing() {
         std::unique_lock<std::mutex> guard(m_QueueMutex);
         m_StopProcessing = true;
         m_PushNotification.notify_all();
@@ -99,7 +99,7 @@ namespace Signature {
 
     template <typename T>
     template <typename ...U>
-    void WorkQueue<T>::Push(U&&... args) {
+    void ConcurrentQueue<T>::Push(U&&... args) {
         std::unique_lock<std::mutex> guard(m_QueueMutex);
 
         // waits while queue is full
@@ -111,7 +111,7 @@ namespace Signature {
     }
 
     template<typename T>
-    std::unique_ptr<T> Signature::WorkQueue<T>::Pop() {
+    std::unique_ptr<T> Signature::ConcurrentQueue<T>::Pop() {
         std::unique_lock<std::mutex> guard(m_QueueMutex);
 
         m_PushNotification.wait(guard, [this] {
@@ -122,7 +122,7 @@ namespace Signature {
             throw EmptyQueueException();
         } else {
 
-            auto pDataChank = std::unique_ptr<DataChank>(std::move(m_Queue.front()));
+            auto pDataChank = std::unique_ptr<DataChunk>(std::move(m_Queue.front()));
             m_Queue.pop();
             m_PopNotification.notify_all();
 

@@ -9,7 +9,7 @@
 #include "includes/Helpers.h"
 
 Signature::FileReader::FileReader(std::string path,
-        WorkQueue<DataChank>& rWorkQueue,
+        ConcurrentQueue<DataChunk>& rWorkQueue,
         size_t blockSize) :
     m_Path(std::move(path)),
     m_BlockSize(blockSize),
