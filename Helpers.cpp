@@ -76,11 +76,6 @@ void Signature::PrintMessageToConsole(const std::string &message) {
     std::cout << message << std::endl;
 }
 
-void Signature::PrintMessageFromStartCurrentLine(const std::string &message) {
-    std::unique_lock<std::mutex> guard(consoleMutex);
-    (std::cout << '\r' << message).flush();
-}
-
 void Signature::PrintErrorMessageToConsole(const std::string &message) {
     std::unique_lock<std::mutex> guard(consoleMutex);
     std::cerr << message << std::endl;

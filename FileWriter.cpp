@@ -36,7 +36,7 @@ void Signature::FileWriter::ProcessHash() {
 
             size_t newCompletedPercents = (hashId * 100) / hashCount;
             if(completedPercents != newCompletedPercents) {
-                PrintMessageFromStartCurrentLine(CreateProgressBar(newCompletedPercents));
+                PrintMessageToConsole(CreateProgressBar(newCompletedPercents));
                 completedPercents = newCompletedPercents;
             }
         }
@@ -74,5 +74,5 @@ std::string Signature::FileWriter::CreateProgressBar(size_t progress) const {
         result.append(".");
     }
 
-    return result;
+    return result + std::to_string(progress) + "%";
 }
